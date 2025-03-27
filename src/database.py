@@ -12,3 +12,4 @@ redis_client = redis.from_url(settings.REDIS_URL)
 
 user_collection = mongo_db["users"]
 letter_collection = mongo_db["letters"]
+token_collection = mongo_db["tokens"]

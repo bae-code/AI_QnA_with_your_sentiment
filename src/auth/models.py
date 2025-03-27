@@ -1,6 +1,7 @@
 from datetime import datetime
-from pydantic import BaseModel, Field
 from uuid import uuid4
+
+from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
@@ -18,7 +19,3 @@ class User(BaseModel):
 class Token(BaseModel):
     access_token: str
     refresh_token: str
-
-
-class TokenData(BaseModel):
-    email: str
