@@ -12,5 +12,3 @@ class LetterContent(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     read_at: datetime | None = None
     reply_to: str | None = None
-
-
