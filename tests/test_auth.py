@@ -26,4 +26,5 @@ async def test_find_user_by_email(test_user_collection):
 @pytest.fixture(scope="session", autouse=True)
 def cleanup_after_all_tests():
     yield  # 테스트가 전부 끝날 때까지 기다림
+    print("\n🧹 테스트 세션 종료: Mongo 클라이언트 종료 중...")
     mongo_client.close()
