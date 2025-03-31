@@ -26,8 +26,8 @@ async def get_letter(letter_id: str, request: Request):
     current_user = request.state.token_info
     letter_service = LetterService()
     letter = await letter_service.get_letter(letter_id)
-    if letter.receiver == current_user["sub"]:
-        await letter_service.read(letter)
+    if letter:
+        letter = await letter_service.read(letter=letter, user_id=current_user["sub"])
     return letter
 
 
