@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str
     GOOGLE_REDIRECT_URI: str
 
-    model_config = SettingsConfigDict(extra="allow")
+    model_config = SettingsConfigDict(extra="allow", env_file=".env")
 
 
 settings = Settings()

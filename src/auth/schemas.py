@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class GoogleOauth2Request(BaseModel):
     code: str
     client_id: str
