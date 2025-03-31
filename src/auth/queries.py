@@ -31,3 +31,15 @@ class TokenQueries(BaseQueries):
     async def create_token(self, token: Token) -> Token:
         await self.create(data=token.model_dump(by_alias=True))
         return token
+
+    async def access_token_refresh(
+        self, access_token: str, refresh_token: str
+    ) -> Token:
+        token = await self.find_and_update(
+            refresh_token=refresh_token, data={"access_token": access_token}
+        )
+        if token:
+            return Token(**token)
+
+        else:
+            return None

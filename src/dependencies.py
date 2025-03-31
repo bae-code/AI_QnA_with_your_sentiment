@@ -53,6 +53,7 @@ class RefreshTokenRequired(HTTPBearer):
 
         try:
             request.state.token_info = verify_refresh_token(token)
+            request.state.refresh_token = token
         except Exception:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"

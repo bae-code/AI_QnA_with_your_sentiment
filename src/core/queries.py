@@ -34,6 +34,15 @@ class BaseQueries:
         filter = self._make_filter(**kwargs)
         return await self.collection.find_one(filter)
 
+    async def find_and_update(self, data: dict, query: Q | None = None, **kwargs):
+        if query:
+            return await self.collection.find_one_and_update(
+                query.query, {"$set": data}
+            )
+        else:
+            filter = self._make_filter(**kwargs)
+            return await self.collection.find_one_and_update(filter, {"$set": data})
+
     async def find(self, query: Q | None = None, **kwargs):
         if query:
             return await self.collection.find(query.query).to_list(length=None)
@@ -42,12 +51,6 @@ class BaseQueries:
 
     async def create(self, data: dict):
         return await self.collection.insert_one(data)
-
-    async def update(self, data: dict, query: Q | None = None, **kwargs):
-        if query:
-            return await self.collection.update_one(query.query, {"$set": data})
-        filter = self._make_filter(**kwargs)
-        return await self.collection.update_one(filter, {"$set": data})
 
     async def delete(self, query: Q):
         return await self.collection.delete_one(query.query)

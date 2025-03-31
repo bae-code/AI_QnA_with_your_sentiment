@@ -20,7 +20,6 @@ class LetterService:
         return await self.letter_queries.get_letters(user_id)
 
     async def read(self, letter: LetterContent):
-        letter.is_read = True
-        letter.read_at = datetime.now()
-        await self.letter_queries.update(letter)
+        data = {"is_read": True, "read_at": datetime.now()}
+        await self.letter_queries.update(letter=letter, data=data)
         return letter

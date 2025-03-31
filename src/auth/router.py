@@ -84,8 +84,18 @@ async def issue_access_token(request: Request):
     auth_service = AuthService()
     token_queries = TokenQueries()
     access_token = auth_service.create_access_token({"sub": current_user["sub"]})
-    token = await token_queries.create_token(token=access_token)
-    return {"access_token": token.access_token}
+    token = await token_queries.access_token_refresh(
+        access_token=access_token, refresh_token=request.state.refresh_token
+    )
+    if token:
+        return {
+            "access_token": token.access_token,
+            "refresh_token": token.refresh_token,
+        }
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
 
 
 @router.post("/me")
