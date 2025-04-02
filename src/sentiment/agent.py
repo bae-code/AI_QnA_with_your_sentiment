@@ -26,6 +26,7 @@ class SentimentAnalysisAgent(Agent):
         return result
 
     def _extract_window_sliding(self, letter: str):
+        # TODO : Refactor sliding window
         letter_sliding_windows = []
         letter_splits = [i for i in letter.split("\n") if len(i) > 1]
         for i, _ in enumerate(letter_splits):
