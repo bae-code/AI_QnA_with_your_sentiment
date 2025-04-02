@@ -3,14 +3,13 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from src.auth.dependencies import (
     get_current_user_from_access_token,
-    get_current_user_from_refresh_token,
 )
 from src.auth.models import Token
 from src.auth.queries import TokenQueries
 from src.auth.schemas import GoogleOauth2Request
 from src.auth.service import AuthService
 from src.config import settings
-from src.dependencies import AuthRequired, RefreshTokenRequired
+from src.dependencies import RefreshTokenRequired
 
 router = APIRouter()
 

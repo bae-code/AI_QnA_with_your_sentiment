@@ -3,7 +3,6 @@ from src.database import letter_collection
 from src.letter.models import LetterContent
 from motor.motor_asyncio import AsyncIOMotorCollection
 from typing import List
-from datetime import datetime
 
 
 class LetterQueries(BaseQueries):

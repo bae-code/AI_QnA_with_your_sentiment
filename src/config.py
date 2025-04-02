@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLIENT_SECRET: str
     GOOGLE_REDIRECT_URI: str
-
+    OPENAI_API_KEY: str
     model_config = SettingsConfigDict(extra="allow", env_file=".env")
 
 
