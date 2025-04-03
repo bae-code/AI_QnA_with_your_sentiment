@@ -2,6 +2,7 @@ from agents import Agent, Runner
 
 from sentiment.client import hugging_face_client
 from sentiment.prompts import sentiment_prompt
+from sentiment.schema import SentimentData
 
 
 class SentimentAnalysisAgent(Agent):
@@ -9,6 +10,7 @@ class SentimentAnalysisAgent(Agent):
         super().__init__(
             name="Sentiment Analysis Agent",
             instructions="You are a sentiment analysis agent. You will be given a text and you will need to analyze the sentiment of the text.",
+            output_type=SentimentData,
         )
         self.analysis_client = hugging_face_client
 
