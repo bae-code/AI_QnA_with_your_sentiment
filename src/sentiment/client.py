@@ -7,7 +7,7 @@ class HuggingFaceClient:
             "text-classification", model="tabularisai/multilingual-sentiment-analysis"
         )
 
-    def classify(self, sentence: str) -> str:
+    def classify(self, sentence: str) -> list:
         result = self.pipe(sentence)
         return result
 

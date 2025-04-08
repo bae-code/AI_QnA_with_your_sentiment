@@ -7,7 +7,7 @@ OpenAI GPT API와 Hugging Face Sentiment 모델을 활용한 AI QnA 서비스입
 ## ⚙️ Tech Stack
 - Python 3.10
 - FastAPI
-- OpenAI API
+- OpenAI Agents
 - Hugging Face Transformers
 - Docker
 - Redis

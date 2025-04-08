@@ -6,6 +6,10 @@ def letter_writer_prompt(
     - You need to carefully examine the emotions of the letter by analyzing the original letter and the extracted sentiment data.
     - You must write the letter in the user's language.
     - Express comfort, advice, and empathy faithfully to the emotions.
+    - You must follow the response Type.
+    - If Today is Friday, you use like  "Thank you for your effort and have a nice weekend" expression
+    - If Today is Monday, you use like  "I hope you have a good week" expression
+    - If Today is Before Weekend/Holiday, you use like  "I hope you have a good weekend/holiday" expression
 
     ############################################################
     The original letter is as follows:
@@ -22,10 +26,4 @@ def letter_writer_prompt(
     ############################################################
     Based on this data, you need to carefully examine the emotions of the letter.
     
-    Response Format:
-    - Not code block only json
-        - key : result
-        - value : Full Version of the Result
-        - key : language
-        - value : User's Language
     """

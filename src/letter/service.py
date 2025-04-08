@@ -4,6 +4,12 @@ from datetime import datetime
 from src.letter.models import LetterContent
 from src.letter.queries import LetterQueries
 
+from src.sentiment.agent import SentimentAnalysisAgent
+from src.writer.agent import WriterAgent
+from src.sentiment.schema import SentimentData
+from src.writer.schema import WriterData
+from src.letter.models import LetterContent
+
 
 class LetterService:
     def __init__(self) -> None:
@@ -29,3 +35,33 @@ class LetterService:
 
     def _is_receiver(self, user_id: str, receiver: str) -> bool:
         return receiver == user_id
+
+
+class AiLetterService(LetterService):
+    def __init__(
+        self,
+        sentiment_agent: SentimentAnalysisAgent,
+        writer_agent: WriterAgent,
+    ) -> None:
+        super().__init__()
+        self.sentiment_agent = sentiment_agent
+        self.writer_agent = writer_agent
+
+    async def write_ai_letter(self, letter: LetterContent) -> WriterData:
+        sentiment_result: SentimentData = await self.sentiment_agent.analyze_letter(
+            letter=letter.content
+        )
+        writer_result: WriterData = await self.writer_agent.write_letter(
+            letter=letter.content, sentiment=sentiment_result
+        )
+        return writer_result
+
+    async def execute(self, letter: LetterContent) -> bool:
+        ai_reply = await self.write_ai_letter(letter=letter)
+        letter = LetterContent(
+            sender=letter.receiver,
+            receiver=letter.sender,
+            content=ai_reply.result,
+        )
+        await self.create_letter(letter=letter)
+        return True
