@@ -3,8 +3,8 @@ from starlette.requests import Request
 
 from src.dependencies import AuthRequired
 from src.letter.models import LetterContent
-from src.letter.schemas import LetterCreateRequest
-from src.letter.service import LetterService
+from src.letter.schemas import LetterCreateRequest, AiTestLetterRequest
+from src.letter.service import LetterService, AiLetterService
 
 router = APIRouter()
 
@@ -40,3 +40,12 @@ async def get_letters(request: Request):
         return letters
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@router.post("/ai")
+async def create_ai_letter(body: AiTestLetterRequest = Body(...)):
+    letter_service = LetterService()
+    ai_letter_service = AiLetterService()
+    letter = await letter_service.get_letter(body.letter_id)
+    result = await ai_letter_service.execute(letter=letter)
+    return result
