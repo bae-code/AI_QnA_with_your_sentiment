@@ -4,11 +4,10 @@ from datetime import datetime
 from src.letter.models import LetterContent
 from src.letter.queries import LetterQueries
 
-from src.sentiment.agent import SentimentAnalysisAgent
-from src.writer.agent import WriterAgent
+from src.sentiment.agent import SentimentAnalysisAgent, sentiment_agent
+from src.writer.agent import WriterAgent, writer_agent
 from src.sentiment.schema import SentimentData
 from src.writer.schema import WriterData
-from src.letter.models import LetterContent
 
 
 class LetterService:
@@ -40,8 +39,8 @@ class LetterService:
 class AiLetterService(LetterService):
     def __init__(
         self,
-        sentiment_agent: SentimentAnalysisAgent,
-        writer_agent: WriterAgent,
+        sentiment_agent: SentimentAnalysisAgent = sentiment_agent,
+        writer_agent: WriterAgent = writer_agent,
     ) -> None:
         super().__init__()
         self.sentiment_agent = sentiment_agent
@@ -54,6 +53,7 @@ class AiLetterService(LetterService):
         writer_result: WriterData = await self.writer_agent.write_letter(
             letter=letter.content, sentiment=sentiment_result
         )
+        print(writer_result)
         return writer_result
 
     async def execute(self, letter: LetterContent) -> bool:
