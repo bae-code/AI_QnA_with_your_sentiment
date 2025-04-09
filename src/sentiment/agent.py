@@ -1,9 +1,9 @@
 from agents import Runner
 
-from sentiment.client import hugging_face_client
-from sentiment.prompts import sentiment_prompt
-from sentiment.schema import SentimentData
-from core.agent import BaseAgent
+from src.sentiment.client import hugging_face_client
+from src.sentiment.prompts import sentiment_prompt
+from src.sentiment.schema import SentimentData
+from src.core.agent import BaseAgent
 
 
 class SentimentAnalysisAgent(BaseAgent):
@@ -38,3 +38,6 @@ class SentimentAnalysisAgent(BaseAgent):
 
     def _get_prompt(self, sentiment_data: list, letter: str) -> str:
         return sentiment_prompt(sentiment_data=sentiment_data, letter=letter)
+
+
+sentiment_agent = SentimentAnalysisAgent()
