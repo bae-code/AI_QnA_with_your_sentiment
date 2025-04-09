@@ -4,8 +4,8 @@ from agents.result import RunResult
 
 
 class BaseAgent(Agent):
-    def __init__(self, name: str, instructions: str, output_type: BaseModel):
-        super().__init__(name=name, instructions=instructions, output_type=output_type)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     def _validate_result(self, result: RunResult):
         return result.final_output_as(self.output_type, raise_if_incorrect_type=True)
