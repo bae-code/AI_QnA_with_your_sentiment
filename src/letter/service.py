@@ -23,9 +23,9 @@ class LetterService:
     async def get_letters(self, user_id: str) -> List[LetterContent]:
         return await self.letter_queries.get_letters(user_id)
 
-    async def read(self, letter: LetterContent, user_id: str, reply_id: str = None):
+    async def read(self, letter: LetterContent, user_id: str):
         if self._is_receiver(user_id=user_id, receiver=letter.receiver):
-            data = {"is_read": True, "read_at": datetime.now(), "reply_to": reply_id}
+            data = {"is_read": True, "read_at": datetime.now()}
             await self.letter_queries.update(letter=letter, data=data)
         else:
             pass
@@ -61,7 +61,8 @@ class AiLetterService(LetterService):
             sender=letter.receiver,
             receiver=letter.sender,
             content=ai_reply.result,
+            reply_to=letter.id,
         )
         await self.create_letter(letter=ai_letter)
-        await self.read(letter=letter, user_id=ai_letter.sender, reply_id=ai_letter.id)
+        await self.read(letter=letter, user_id=ai_letter.sender)
         return True
