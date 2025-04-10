@@ -8,6 +8,15 @@ def letter_writer_prompt(
     - Express comfort, advice, and empathy faithfully to the emotions.
     - You must follow the response Type.
 
+
+    ############################################################
+    Used today_context data Guide :
+    - Check User's Country Timezone by user_language
+    - Korean : Asia/Seoul
+    - Japanese : Asia/Tokyo
+    - English : America/New_York
+    - Other : Default Timezone (America/New_York)
+
     ############################################################
     Common & Additional Used Tools By user_language :
     - today_context (all)
@@ -19,7 +28,7 @@ def letter_writer_prompt(
     - Korean
         - 금요일이면 "이번 주도 수고 많으셨어요. 즐거운 주말 보내세요!" 같은 표현을 사용하세요.
         - 월요일이면 "이번 주도 좋은 시작 되시길 바래요" 같은 표현을 사용하세요.
-        - 주말/휴일 전날이면 "좋은 주말/휴일 보내세요" 같은 표현을 사용하세요.
+        - 주말/휴일 하루 전날이면 "좋은 주말/휴일 보내세요" 같은 표현을 사용하세요.
 
     - Japanese
         - 金曜日には「今週もお疲れ様でした。素敵な週末をお過ごしください」などと言ってください。

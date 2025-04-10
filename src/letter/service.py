@@ -1,12 +1,11 @@
-from typing import List
 from datetime import datetime
+from typing import List
 
 from src.letter.models import LetterContent
 from src.letter.queries import LetterQueries
-
 from src.sentiment.agent import SentimentAnalysisAgent, sentiment_agent
-from src.writer.agent import WriterAgent, writer_agent
 from src.sentiment.schema import SentimentData
+from src.writer.agent import WriterAgent, writer_agent
 from src.writer.schema import WriterData
 
 
@@ -24,9 +23,9 @@ class LetterService:
     async def get_letters(self, user_id: str) -> List[LetterContent]:
         return await self.letter_queries.get_letters(user_id)
 
-    async def read(self, letter: LetterContent, user_id: str):
+    async def read(self, letter: LetterContent, user_id: str, reply_id: str = None):
         if self._is_receiver(user_id=user_id, receiver=letter.receiver):
-            data = {"is_read": True, "read_at": datetime.now()}
+            data = {"is_read": True, "read_at": datetime.now(), "reply_to": reply_id}
             await self.letter_queries.update(letter=letter, data=data)
         else:
             pass
@@ -58,10 +57,11 @@ class AiLetterService(LetterService):
 
     async def execute(self, letter: LetterContent) -> bool:
         ai_reply = await self.write_ai_letter(letter=letter)
-        letter = LetterContent(
+        ai_letter = LetterContent(
             sender=letter.receiver,
             receiver=letter.sender,
             content=ai_reply.result,
         )
-        await self.create_letter(letter=letter)
+        await self.create_letter(letter=ai_letter)
+        await self.read(letter=letter, user_id=ai_letter.sender, reply_id=ai_letter.id)
         return True
