@@ -31,6 +31,15 @@ async def get_letter(letter_id: str, request: Request):
     return letter
 
 
+@router.get("/test/")
+async def test_mcp(request: Request):
+    from src.forecast.agent import ForecastAgent
+
+    agent = ForecastAgent()
+    result = await agent.test_mcp()
+    return result
+
+
 @router.get("/list/", dependencies=[Depends(AuthRequired())])
 async def get_letters(request: Request):
     current_user = request.state.token_info

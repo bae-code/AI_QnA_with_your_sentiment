@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     GOOGLE_REDIRECT_URI: str
     OPENAI_API_KEY: str
     KR_GOV_DATA_API_KEY: str
+    SLACK_BOT_TOKEN: str
+    ACCU_WEATHER_API_KEY: str
     model_config = SettingsConfigDict(extra="allow", env_file=".env")
 
 
