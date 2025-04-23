@@ -11,6 +11,19 @@ class Q:
     def __or__(self, other: "Q") -> "Q":
         return Q({"$or": [self.query, other.query]})
 
+    # 단일 필드용 편의 메서드
+    @classmethod
+    def in_(cls, field: str, value):
+        return Q(cls._auto_in(field, value))
+
+    # 여러 필드 한꺼번에
+    @classmethod
+    def filter(cls, **kwargs):
+        cond = {}
+        for k, v in kwargs.items():
+            cond.update(cls._auto_in(k, v))
+        return Q(cond)
+
     @classmethod
     def or_(cls, **kwargs):
         return Q({"$or": [{k: v} for k, v in kwargs.items()]})
@@ -18,6 +31,15 @@ class Q:
     @classmethod
     def and_(cls, **kwargs):
         return Q({"$and": [{k: v} for k, v in kwargs.items()]})
+
+    @staticmethod
+    def _auto_in(field: str, value):
+        """값이 여러개이면 $in, 단일이면 그대로"""
+        if isinstance(value, str) and "," in value:
+            value = [v.strip() for v in value.split(",") if v.strip()]
+        if isinstance(value, (list, tuple, set)):
+            return {field: {"$in": list(value)}}
+        return {field: value}
 
     def __repr__(self):
         return f"Q({self.query})"
@@ -54,3 +76,6 @@ class BaseQueries:
 
     async def delete(self, query: Q):
         return await self.collection.delete_one(query.query)
+
+    async def exists(self, query: Q):
+        return await self.collection.count_documents(query.query) > 0

@@ -6,6 +6,13 @@ from src.letter.models import LetterContent
 from src.letter.schemas import LetterCreateRequest, AiTestLetterRequest
 from src.letter.service import LetterService, AiLetterService
 
+from src.forecast.agent import ForecastAgent, ForecastQueryAgent
+from src.forecast.queries import ForecastQueries
+from src.core.queries import Q
+
+from src.slack.client import SlackClient
+
+
 router = APIRouter()
 
 
@@ -33,11 +40,43 @@ async def get_letter(letter_id: str, request: Request):
 
 @router.get("/test/")
 async def test_mcp(request: Request):
-    from src.forecast.agent import ForecastAgent
+    user_request = "삿포로 여행을 가려고하는데 6월3일에서 7일까지 날씨좀"
+    query_agent = ForecastQueryAgent()
+    forecast_agent = ForecastAgent()
+    forecast_queries = ForecastQueries()
 
-    agent = ForecastAgent()
-    result = await agent.test_mcp()
-    return result
+    query = await query_agent.run(user_request=user_request)
+
+    query = Q.filter(**query.query.model_dump(by_alias=True))
+
+    forecasts = await forecast_queries.get_forecasts(query=query)
+
+    await forecast_agent.test_mcp(user_request=user_request, historical_data=forecasts)
+    return True
+
+
+@router.post("/test/slack")
+async def test_slack(request: Request):
+    if "X-Slack-Retry-Num" in request.headers:
+        return True  # 이미 받은 이벤트임
+
+    slack_client = SlackClient()
+    data = await request.json()
+    event = data.get("event")
+    command = data.get("command")
+    user_id = data.get("user_id")
+    payload = data.get("payload")
+    challenge = data.get("challenge")
+    print(event)
+    print(command)
+    print(user_id)
+    print(payload)
+    print(challenge)
+    if challenge:
+        """test용도"""
+        return {"challenge": challenge}
+    user_request, channel = await slack_client.run_event(event=event)
+    return True
 
 
 @router.get("/list/", dependencies=[Depends(AuthRequired())])
